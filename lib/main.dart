@@ -25,6 +25,32 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  List<Widget> scorekeeper = [];
+  List<bool> answers = [false,true,true,true];
+  int questionNo = 0;
+  List<String> questions = [
+    ' There are 90% of people who loves mathematics ? ' ,
+    ' Tiger is from family of cat? ' ,
+    ' Iphone is better than Android Phone ?',
+    ' Press any option to restart'
+  ];
+
+  void checkans(bool userans){
+    setState(() {
+      if (userans == answers[questionNo])
+        scorekeeper.add(Icon(Icons.check, color: Colors.green,));
+      else
+        scorekeeper.add(Icon(Icons.close, color: Colors.red,));
+
+      if(questionNo < questions.length - 1)
+          questionNo++;
+      else{
+        questionNo = 0;
+        scorekeeper.clear();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -37,7 +63,7 @@ class _QuizPageState extends State<QuizPage> {
             padding: EdgeInsets.all(10.0),
             child: Center(
               child: Text(
-                'This is where the question text will go.',
+                questions[questionNo],
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 25.0,
@@ -50,9 +76,10 @@ class _QuizPageState extends State<QuizPage> {
         Expanded(
           child: Padding(
             padding: EdgeInsets.all(15.0),
-            child: FlatButton(
-              textColor: Colors.white,
-              color: Colors.green,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
               child: Text(
                 'True',
                 style: TextStyle(
@@ -61,7 +88,7 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                //The user picked true.
+                checkans(true);
               },
             ),
           ),
@@ -69,8 +96,10 @@ class _QuizPageState extends State<QuizPage> {
         Expanded(
           child: Padding(
             padding: EdgeInsets.all(15.0),
-            child: FlatButton(
-              color: Colors.red,
+            child: TextButton(
+              style: TextButton.styleFrom(
+                backgroundColor: Colors.red,
+              ),
               child: Text(
                 'False',
                 style: TextStyle(
@@ -79,12 +108,14 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                //The user picked false.
+                checkans(false);
               },
             ),
           ),
         ),
-        //TODO: Add a Row here as your score keeper
+        Row(
+          children: scorekeeper,
+        )
       ],
     );
   }
